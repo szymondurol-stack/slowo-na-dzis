@@ -1,4 +1,4 @@
-# Słowo na dziś — v7
+# Słowo na dziś — v8
 
 Gotowy projekt do wdrożenia na Vercel.
 
@@ -57,3 +57,12 @@ są chronione prawami ILG. Dzięki temu projekt nie republikuje tych tekstów be
 
 Jeśli Wrocław Wielbi uzyska zgodę na natywne publikowanie pełnego Brewiarza,
 frontend jest gotowy do rozbudowy o czytnik wewnątrz strony.
+
+
+## Poprawka v8 — pełne czytania
+
+Parser liturgii nie zakłada już, że treść jest bezpośrednim rodzeństwem nagłówka.
+Sekcje są odczytywane w kolejności dokumentu, dlatego poprawnie obsługiwane są:
+Pierwsze czytanie, Psalm responsoryjny, Drugie czytanie, Werset przed Ewangelią i Ewangelia.
+
+Przy duplikatach wersji mobilnej/desktopowej wybierana jest sekcja z największą ilością treści.
