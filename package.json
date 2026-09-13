@@ -1,0 +1,9 @@
+{
+  "name": "slowo-na-dzis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Czytnik codziennych czytań liturgicznych dla Wrocław Wielbi",
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}

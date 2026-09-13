@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f1eee5">
+  <meta name="description" content="Codzienne czytania liturgiczne — Słowo na dziś.">
+  <title>Słowo na dziś</title>
+  <style>
+    :root{
+      --paper:#f1eee5;
+      --ink:#111;
+      --muted:#6d6961;
+      --line:rgba(17,17,17,.22);
+      --reader-size:22px;
+      --wide:1320px;
+      --reading:820px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--paper)}
+    body{
+      margin:0;background:var(--paper);color:var(--ink);
+      font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;
+    }
+    body.dark{--paper:#111;--ink:#f1eee5;--muted:#bcb7ad;--line:rgba(241,238,229,.25)}
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.07;
+      background-image:repeating-radial-gradient(circle at 0 0,rgba(0,0,0,.22) 0 .45px,transparent .55px 3px);
+      background-size:7px 7px;mix-blend-mode:multiply
+    }
+    .wrap{width:min(calc(100% - 36px),var(--wide));margin:auto}
+    .site-header{
+      position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 94%,transparent);
+      backdrop-filter:blur(14px);border-bottom:1px solid var(--ink)
+    }
+    .topbar{
+      min-height:58px;display:grid;grid-template-columns:1fr auto 1fr;
+      align-items:center;gap:26px;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase
+    }
+    .brand{display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none;white-space:nowrap}
+    .brand-mark{width:14px;height:14px;background:var(--ink);border-radius:50%}
+    .header-day-nav{display:flex;justify-content:center;gap:26px}
+    .header-day-nav a{color:inherit;text-decoration:none;padding:20px 0 17px;border-bottom:2px solid transparent}
+    .header-day-nav a:hover,.header-day-nav .active-day{border-color:currentColor}
+    .header-controls{display:flex;justify-content:flex-end;gap:16px;align-items:center}
+    .header-controls button{
+      border:0;background:none;color:inherit;font:inherit;font-size:12px;font-weight:900;cursor:pointer;padding:8px 0
+    }
+    .header-controls button:last-child{margin-left:6px;padding-left:18px;border-left:1px solid var(--ink)}
+
+    .hero{padding:34px 0 48px;border-bottom:1px solid var(--ink)}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,.6fr);gap:56px;align-items:end}
+    .kicker{margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    .display{
+      margin:0;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",Arial,sans-serif;
+      font-size:clamp(72px,11vw,160px);line-height:.8;letter-spacing:-.045em;text-transform:uppercase
+    }
+    .display span{display:block}
+    .date-panel{padding-bottom:5px}
+    .date-label{margin:0 0 9px;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.58}
+    .date-big{
+      margin:0;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",Arial,sans-serif;
+      font-size:32px;line-height:1;text-transform:uppercase
+    }
+    .date-sub{margin:10px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+    .celebration{margin-top:14px;font-size:11px;line-height:1.5;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+
+    .quote-strip{
+      display:grid;grid-template-columns:40px minmax(0,1fr) 220px;gap:28px;align-items:end;
+      padding:44px 0 48px;border-bottom:1px solid var(--ink)
+    }
+    .quote-rule{width:32px;height:1px;background:var(--ink);align-self:start;margin-top:12px}
+    blockquote{margin:0;max-width:700px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,3vw,38px);line-height:1.18;font-style:italic}
+    blockquote cite{display:block;margin-top:16px;font:800 10px Arial;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+    .quote-side{text-align:right;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;line-height:1.6}
+
+    .readings{
+      counter-reset:reading;width:min(calc(100% - 36px),var(--reading));margin:auto;padding:78px 0 110px
+    }
+    .loading{padding:80px 0;text-align:center;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .reading{
+      counter-increment:reading;position:relative;padding-bottom:72px;margin-bottom:72px;border-bottom:1px solid var(--ink)
+    }
+    .reading:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+    .reading:before{
+      content:"(" counter(reading,decimal-leading-zero) ")";position:absolute;left:-74px;top:4px;
+      font-size:10px;font-weight:800;letter-spacing:.18em
+    }
+    .reading-meta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start;margin-bottom:26px}
+    .reading-type{margin:0;font-size:15px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .reading-ref{margin:0;font:400 18px/1.25 Georgia,"Times New Roman",serif;white-space:nowrap}
+    .reading-lead{margin:-13px 0 23px;color:var(--muted);font:400 17px/1.45 Georgia,"Times New Roman",serif}
+    .reading-text{max-width:700px;font:400 var(--reader-size)/1.72 Georgia,"Times New Roman",serif}
+    .reading-text p{margin:0 0 1.35em;white-space:pre-line}
+    .reading-text p:last-child{margin-bottom:0}
+    .response{margin:15px 0 28px;font:italic 400 clamp(21px,3vw,31px)/1.25 Georgia,"Times New Roman",serif}
+    .gospel .reading-type:before{content:"✚ ";font-size:.92em}
+    .acclamation{opacity:.86}
+    .error-box{
+      border:1px solid var(--ink);padding:28px;font:400 18px/1.55 Georgia,"Times New Roman",serif
+    }
+    .error-box a{color:inherit;font-family:Arial,sans-serif;font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+
+    footer{background:var(--ink);color:var(--paper);padding:54px 0 26px}
+    .footer-branding{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(320px,.7fr);gap:80px;align-items:end}
+    .footer-kicker,.footer-label{margin-bottom:22px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;opacity:.58}
+    .footer-title{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",Arial,sans-serif;font-size:clamp(54px,8vw,108px);line-height:.8;letter-spacing:-.04em;text-transform:uppercase}
+    .footer-description{max-width:520px;margin:28px 0 0;font:400 19px/1.5 Georgia,"Times New Roman",serif;opacity:.78}
+    .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+    .footer-column{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+    .footer-column a{color:inherit;text-decoration:none;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",Arial,sans-serif;font-size:23px;text-transform:uppercase}
+    .footer-bottom{display:flex;justify-content:space-between;gap:24px;margin-top:58px;padding-top:18px;border-top:1px solid rgba(241,238,229,.45);font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;opacity:.62}
+
+    @media(max-width:900px){
+      .topbar{grid-template-columns:1fr auto}
+      .header-day-nav{order:3;grid-column:1/-1;border-top:1px solid var(--ink)}
+      .header-day-nav a{padding:12px 0 10px}
+      .hero-grid{grid-template-columns:1fr;gap:24px}
+      .quote-strip{grid-template-columns:32px 1fr}.quote-side{grid-column:2;text-align:left}
+      .reading:before{position:static;display:block;margin-bottom:18px}
+      .footer-branding{grid-template-columns:1fr;gap:54px}
+    }
+    @media(max-width:620px){
+      .site-header{position:static}
+      .wrap,.readings{width:min(calc(100% - 24px),var(--wide))}
+      .topbar{gap:12px}.brand{font-size:10px}.header-controls{gap:11px}
+      .header-controls button:last-child{padding-left:11px}
+      .header-day-nav{justify-content:space-between}
+      .hero{padding:24px 0 34px}.display{font-size:clamp(68px,25vw,112px)}
+      .quote-strip{grid-template-columns:1fr;gap:20px;padding:34px 0 38px}.quote-side{grid-column:1}
+      .readings{padding:58px 0 78px}
+      .reading{padding-bottom:56px;margin-bottom:56px}
+      .reading-meta{grid-template-columns:1fr;gap:7px}.reading-ref{white-space:normal}
+      .reading-lead{margin-top:0;font-size:15px}
+      .reading-text{--reader-size:19px}
+      .footer-links{grid-template-columns:1fr;gap:34px}.footer-bottom{flex-direction:column;gap:8px}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap topbar">
+      <a class="brand" id="brandHome" href="/">
+        <span class="brand-mark"></span><span>Słowo / na dziś</span>
+      </a>
+      <nav class="header-day-nav" aria-label="Nawigacja po dniach">
+        <a id="prevDay" href="#">← Wczoraj</a>
+        <a id="todayDay" class="active-day" href="/">Dziś</a>
+        <a id="nextDay" href="#">Jutro →</a>
+      </nav>
+      <div class="header-controls">
+        <button id="fontDown" type="button" aria-label="Zmniejsz tekst">A−</button>
+        <button id="fontUp" type="button" aria-label="Powiększ tekst">A+</button>
+        <button id="themeToggle" type="button" aria-label="Zmień motyw">☾</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker">Czytania liturgiczne Kościoła katolickiego</p>
+        <h1 class="display">Słowo<span>na dziś</span></h1>
+      </div>
+      <aside class="date-panel">
+        <p class="date-label" id="dateLabel">Wybrany dzień</p>
+        <p class="date-big" id="dateBig">—</p>
+        <p class="date-sub" id="dateSub">—</p>
+        <div class="celebration" id="celebration"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="wrap quote-strip">
+    <div class="quote-rule"></div>
+    <blockquote>„Twoje słowo jest lampą dla moich stóp i światłem na mojej ścieżce.”<cite>Ps 119, 105</cite></blockquote>
+    <div class="quote-side">Każdego dnia<br>Boże Słowo<br>prowadzi dalej</div>
+  </section>
+
+  <main id="czytania" class="readings" aria-live="polite">
+    <div class="loading">Pobieram czytania…</div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-branding">
+      <div>
+        <div class="footer-kicker">Projekt / Wrocław Wielbi</div>
+        <div class="footer-title">Słowo<br>na dziś</div>
+        <p class="footer-description">Codzienne czytania liturgiczne. Projekt tworzony przez Wrocław Wielbi — tworzymy przestrzeń uwielbienia.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <div class="footer-label">Wrocław Wielbi</div>
+          <a href="https://wroclawwielbi.pl/" target="_blank" rel="noopener">Strona ↗</a>
+        </div>
+        <div class="footer-column">
+          <div class="footer-label">Znajdź nas</div>
+          <a href="https://www.instagram.com/wroclawwielbi" target="_blank" rel="noopener">Instagram ↗</a>
+          <a href="https://www.facebook.com/wroclawwielbi" target="_blank" rel="noopener">Facebook ↗</a>
+          <a href="https://www.youtube.com/@wroclawwielbi" target="_blank" rel="noopener">YouTube ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="wrap footer-bottom"><span>Wrocław Wielbi</span><span>Tworzymy przestrzeń uwielbienia</span></div>
+  </footer>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+
+  function ymdLocal(d){
+    const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+  function parseYmd(value){
+    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||"");
+    if(!m) return null;
+    const d=new Date(+m[1],+m[2]-1,+m[3],12,0,0);
+    return Number.isNaN(d.getTime())?null:d;
+  }
+  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function hrefFor(d){ return `/?date=${ymdLocal(d)}`; }
+  function esc(s=""){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+  const params=new URLSearchParams(location.search);
+  const today=new Date();
+  const selected=parseYmd(params.get("date")) || today;
+  const selectedYmd=ymdLocal(selected);
+  const isToday=selectedYmd===ymdLocal(today);
+
+  $("#prevDay").href=hrefFor(addDays(selected,-1));
+  $("#nextDay").href=hrefFor(addDays(selected,1));
+  $("#todayDay").href="/";
+  $("#dateLabel").textContent=isToday?"Dzisiaj":"Wybrany dzień";
+
+  const big=new Intl.DateTimeFormat("pl-PL",{day:"2-digit",month:"2-digit",year:"numeric"}).format(selected);
+  const long=new Intl.DateTimeFormat("pl-PL",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(selected);
+  $("#dateBig").textContent=big.replaceAll("."," / ");
+  $("#dateSub").textContent=long.charAt(0).toUpperCase()+long.slice(1);
+
+  let readerSize=+(localStorage.getItem("readerSize")||22);
+  const applySize=()=>document.documentElement.style.setProperty("--reader-size",readerSize+"px");
+  applySize();
+  $("#fontDown").onclick=()=>{readerSize=Math.max(17,readerSize-1);localStorage.setItem("readerSize",readerSize);applySize()};
+  $("#fontUp").onclick=()=>{readerSize=Math.min(30,readerSize+1);localStorage.setItem("readerSize",readerSize);applySize()};
+
+  const savedTheme=localStorage.getItem("theme");
+  if(savedTheme==="dark") document.body.classList.add("dark");
+  const syncTheme=()=>$("#themeToggle").textContent=document.body.classList.contains("dark")?"☀":"☾";
+  syncTheme();
+  $("#themeToggle").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");syncTheme()};
+
+  function readingHTML(item){
+    const cls=item.kind==="Ewangelia"?"reading gospel":"reading";
+    const lead=item.lead?`<p class="reading-lead">${esc(item.lead)}</p>`:"";
+    let body="";
+    if(item.response) body+=`<div class="response">${esc(item.response)}</div>`;
+    for(const p of item.body||[]) body+=`<p>${esc(p)}</p>`;
+    return `<article class="${cls}">
+      <div class="reading-meta">
+        <h2 class="reading-type">${esc(item.kind)}</h2>
+        <div class="reading-ref">${esc(item.ref||"")}</div>
+      </div>
+      ${lead}
+      <div class="reading-text">${body}</div>
+    </article>`;
+  }
+
+  async function load(){
+    try{
+      const r=await fetch(`/api/liturgia?date=${selectedYmd}`,{headers:{"accept":"application/json"}});
+      if(!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data=await r.json();
+      if(data.celebration) $("#celebration").textContent=data.celebration;
+      document.title=`Słowo na dziś — ${new Intl.DateTimeFormat("pl-PL",{day:"numeric",month:"long",year:"numeric"}).format(selected)}`;
+      const items=(data.readings||[]).filter(x=>x && (x.body?.length || x.response));
+      if(!items.length) throw new Error("Brak czytań w odpowiedzi");
+      $("#czytania").innerHTML=items.map(readingHTML).join("");
+    }catch(err){
+      console.error(err);
+      $("#czytania").innerHTML=`<div class="error-box">
+        <strong>Nie udało się pobrać czytań.</strong><br><br>
+        Spróbuj odświeżyć stronę. Możesz też otworzyć czytania dla tego dnia bezpośrednio w źródle.<br><br>
+        <a href="https://opoka.org.pl/liturgia/${selectedYmd}" target="_blank" rel="noopener">Otwórz liturgię na Opoka.org.pl ↗</a>
+      </div>`;
+    }
+  }
+  load();
+})();
+</script>
+</body>
+</html>
