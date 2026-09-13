@@ -174,7 +174,7 @@
     }
     .date-rule{width:42px;height:2px;background:var(--ink);margin:20px 0 17px}
     .date-sub{display:none}
-    .celebration{
+    .celebration{display:none !important;
       margin-top:0;
       max-width:285px;
       font:400 16px/1.42 Georgia,"Times New Roman",serif;
@@ -616,15 +616,6 @@
     font-weight:900 !important;
   }
 
-  .date-panel::after{
-    content:"";
-    display:block;
-    width:62px;
-    height:3px;
-    margin-top:18px;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  }
-
   .celebration{
     font-family:Arial,Helvetica,sans-serif !important;
     font-size:11px !important;
@@ -964,7 +955,8 @@
         <p class="date-big" id="dateBig">—</p>
         <p class="date-sub" id="dateSub">—</p>
         <div class="date-rule"></div>
-        <div class="celebration" id="celebration"></div>
+        <div class="date-weekday" id="dateWeekday">—</div>
+        
       </aside>
     </div>
   </section>
@@ -1082,6 +1074,9 @@
   $("#dateBig").textContent=big.replaceAll("."," / ");
   $("#dateSub").textContent=long.charAt(0).toUpperCase()+long.slice(1);
 
+  const weekdayOnly = new Intl.DateTimeFormat("pl-PL",{weekday:"long"}).format(selected);
+  $("#dateWeekday").textContent = weekdayOnly.toUpperCase();
+
   let readerSize=+(localStorage.getItem("readerSize")||18);
   const applySize=()=>document.documentElement.style.setProperty("--reader-size",readerSize+"px");
   applySize();
@@ -1167,7 +1162,6 @@
       if(!r.ok) throw new Error(`HTTP ${r.status}`);
       const data=await r.json();
 
-      if(data.celebration) $("#celebration").textContent=data.celebration;
 
       document.title=`Słowo na dziś — ${new Intl.DateTimeFormat("pl-PL",{day:"numeric",month:"long",year:"numeric"}).format(selected)}`;
 
