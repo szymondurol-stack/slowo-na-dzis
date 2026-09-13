@@ -1,4 +1,4 @@
-# Słowo na dziś — v11
+# Słowo na dziś — v15
 
 Gotowy projekt do wdrożenia na Vercel.
 
@@ -77,3 +77,21 @@ Ta wersja odwzorowuje wybrany kierunek:
 - cytat w osobnym pasie,
 - kompaktowy układ czytań jak w starym mszale / gazecie,
 - pełna funkcjonalność czytań, Ewangelii oraz Liturgii Godzin.
+
+
+## Styl v15 — zunifikowany z Wrocław Wielbi
+
+Wersja v15 wykorzystuje współczesny język wizualny:
+- jasne, ciepłe tło,
+- bardzo mocna typografia,
+- fioletowo-niebieskie akcenty świetlne,
+- ciemna sekcja Liturgii Godzin,
+- spójna stylistyka z innymi projektami Wrocław Wielbi,
+- pełna responsywność.
+
+Funkcjonalność pozostaje bez zmian:
+- czytania na wybraną datę,
+- Wczoraj / Dziś / Jutro,
+- Jutrznia i Nieszpory,
+- zmiana rozmiaru tekstu,
+- tryb ciemny.
