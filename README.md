@@ -1,4 +1,4 @@
-# Słowo na dziś — v8
+# Słowo na dziś — v11
 
 Gotowy projekt do wdrożenia na Vercel.
 
@@ -66,3 +66,14 @@ Sekcje są odczytywane w kolejności dokumentu, dlatego poprawnie obsługiwane s
 Pierwsze czytanie, Psalm responsoryjny, Drugie czytanie, Werset przed Ewangelią i Ewangelia.
 
 Przy duplikatach wersji mobilnej/desktopowej wybierana jest sekcja z największą ilością treści.
+
+
+## Styl v11 — pergamin ze screena
+
+Ta wersja odwzorowuje wybrany kierunek:
+- mocno postarzone krawędzie starej karty,
+- skondensowany czarny hero,
+- data po prawej,
+- cytat w osobnym pasie,
+- kompaktowy układ czytań jak w starym mszale / gazecie,
+- pełna funkcjonalność czytań, Ewangelii oraz Liturgii Godzin.
