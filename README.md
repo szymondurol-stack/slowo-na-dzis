@@ -1,4 +1,4 @@
-# Słowo na dziś — v6
+# Słowo na dziś — v7
 
 Gotowy projekt do wdrożenia na Vercel.
 
@@ -12,7 +12,9 @@ Gotowy projekt do wdrożenia na Vercel.
 - responsywny layout,
 - stopka Wrocław Wielbi,
 - cache odpowiedzi po stronie platformy,
-- awaryjny link do źródła, gdy pobieranie danych nie zadziała.
+- awaryjny link do źródła, gdy pobieranie danych nie zadziała,
+- sekcja Liturgii Godzin: Jutrznia i Nieszpory dla wybranego dnia,
+- automatyczne odnajdywanie właściwych odnośników w Brewiarz.pl.
 
 ## Uruchomienie
 
@@ -41,3 +43,17 @@ Opoka oficjalnie publikuje również iframe do osadzania codziennych czytań. Pr
 ## Ważne
 
 Parser jest celowo odseparowany od frontendu. Gdy zmieni się HTML źródła, poprawiasz tylko `api/liturgia.js`, bez ruszania całego wyglądu strony.
+
+
+## Jutrznia i Nieszpory
+
+Endpoint `/api/brewiarz?date=YYYY-MM-DD` nie kopiuje pełnych tekstów Liturgii Godzin.
+Odnajduje właściwą stronę dla dnia i zwraca bezpośrednie linki do Jutrzni i Nieszporów
+w serwisie Brewiarz.pl.
+
+To celowy wybór: serwis Brewiarz.pl podaje, że teksty Liturgii Godzin są chronione
+prawami Konferencji Episkopatu Polski i Wydawnictwa Pallottinum, a opracowanie i edycja
+są chronione prawami ILG. Dzięki temu projekt nie republikuje tych tekstów bez uzgodnienia licencji.
+
+Jeśli Wrocław Wielbi uzyska zgodę na natywne publikowanie pełnego Brewiarza,
+frontend jest gotowy do rozbudowy o czytnik wewnątrz strony.
